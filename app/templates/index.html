@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- <link rel="stylesheet" href="/app/static/styles.css"> -->
+</head>
+<body>
+
+    <div class="main">
+        <div class="backlog">
+            <h1>Backlog</h1>
+            <div class="element">
+                Just Some Task 1
+            </div>
+            <div class="element">
+                Just Some Task 2
+            </div>
+        </div>
+        <div class="inprogress"><h1>In Progress</h1>
+            <div class="element">
+                Just Some Task 3
+            </div>
+        </div>
+        <div class="testing">
+            <h1>Testing</h1>
+            <div class="element">
+                Just Some Task 4
+            </div>
+            <div class="element">
+                Just Some Task 5
+            </div>
+        </div>
+        <div class="done">
+            <h1>Done</h1>
+            <div class="element">
+                Just Some Task 6
+            </div>
+        </div>
+    </div>
+    <script>
+        const items = document.querySelectorAll('.element');
+        const columns = document.querySelectorAll('.backlog, .inprogress, .testing, .done');
+
+        items.forEach(item => {
+        let offsetX, offsetY;
+
+        const mouseMove = (e) => {
+            const parentRect = item.parentElement.getBoundingClientRect();
+            item.style.left = `${e.clientX - parentRect.left - offsetX}px`;
+            item.style.top = `${e.clientY - parentRect.top - offsetY}px`;
+        };
+
+        const mouseUp = (e) => {
+            item.classList.remove('dragging');
+            item.style.position = 'relative';
+            item.style.left = '';
+            item.style.top = '';
+            item.style.zIndex = '';
+
+            // Check which column the mouse is in
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            for (const col of columns) {
+            const rect = col.getBoundingClientRect();
+            if (
+                mouseX >= rect.left &&
+                mouseX <= rect.right &&
+                mouseY >= rect.top &&
+                mouseY <= rect.bottom
+            ) {
+                col.appendChild(item);
+                break;
+            }
+            }
+
+            document.removeEventListener('mousemove', mouseMove);
+            document.removeEventListener('mouseup', mouseUp);
+        };
+
+        item.addEventListener('mousedown', (e) => {
+            item.classList.add('dragging');
+            item.style.position = 'absolute';
+            item.style.zIndex = 1000;
+
+            const rect = item.getBoundingClientRect();
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+
+            const parentRect = item.parentElement.getBoundingClientRect();
+            item.style.left = `${e.clientX - parentRect.left - offsetX}px`;
+            item.style.top = `${e.clientY - parentRect.top - offsetY}px`;
+
+            document.addEventListener('mousemove', mouseMove);
+            document.addEventListener('mouseup', mouseUp);
+        });
+        });
+      </script>
+      
+</body>
+</html>
