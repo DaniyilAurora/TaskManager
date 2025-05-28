@@ -2,13 +2,15 @@ import sqlite3
 
 
 class Database():
+    # Initialise database
     def __init__(self):
         self.connection = sqlite3.connect("db.db", check_same_thread=False)
         self.cursor = self.connection.cursor()
 
+        # If it is first launch, then create tables
         if self.is_first_launch():
             self.create_tables()
-        
+
     def create_tables(self):
         # Create "accounts" table
         self.cursor.execute("""
@@ -32,7 +34,6 @@ class Database():
         """)
 
         self.connection.commit()
-
 
         # Create "sessions" table
         self.cursor.execute("""

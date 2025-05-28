@@ -1,5 +1,7 @@
 from flask import Flask, render_template
 from app.database import Database
+# from app.connection import Connection
+
 
 class App():
     # Initialise the app
